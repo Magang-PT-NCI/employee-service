@@ -13,19 +13,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum Position {
   OnSite
   Koordinator
 }
 
 model Employee {
-  nik           String @id @db.VarChar(20)
-  name          String @db.VarChar(50)
-  password      String @db.VarChar(255)
-  area          String @db.VarChar(50)
-  role          String @db.VarChar(50)
-  position      Role   @default(OnSite)
-  profile_photo String @db.VarChar(255)
+  nik           String   @id @db.VarChar(20)
+  name          String   @db.VarChar(50)
+  password      String   @db.VarChar(255)
+  area          String   @db.VarChar(50)
+  role          String   @db.VarChar(50)
+  position      Position @default(OnSite)
+  profile_photo String   @db.VarChar(255)
 }
 
 model ApiKey {
