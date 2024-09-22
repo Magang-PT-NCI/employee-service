@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { EmployeeService } from './services/employee.service';
+import { EmployeeController } from './controllers/employee.controller';
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [EmployeeController],
+  providers: [EmployeeService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

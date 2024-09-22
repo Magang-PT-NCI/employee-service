@@ -4,7 +4,7 @@ import { logFormat, logger } from '../../utils/logger.utils';
 
 jest.mock('../../utils/logger.utils');
 
-describe('LoggerMiddleware', () => {
+describe('logger middleware test', () => {
   let middleware: LoggerMiddleware;
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
