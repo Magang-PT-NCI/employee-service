@@ -5,6 +5,7 @@ import { logger } from './utils/logger.utils';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   logger.info(`Application started on port ${port}`);
 
