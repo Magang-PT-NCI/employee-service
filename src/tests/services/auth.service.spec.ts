@@ -59,7 +59,7 @@ describe('auth service test', () => {
     });
   });
 
-  describe('validate token', () => {
+  describe('handle validate token test', () => {
     it('should return null for invalid token', async () => {
       const token = 'rahasia';
 
@@ -67,7 +67,7 @@ describe('auth service test', () => {
         throw new Error();
       });
 
-      const result = await service.validateToken(token);
+      const result = await service.handleValidateToken(token);
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
       expect(logger.error).toHaveBeenCalled();
       expect(result).toBeNull();
@@ -80,7 +80,7 @@ describe('auth service test', () => {
       (verify as jest.Mock).mockReturnValue(tokenData);
       (EmployeeModel.get as jest.Mock).mockReturnValue(null);
 
-      const result = await service.validateToken(token);
+      const result = await service.handleValidateToken(token);
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
       expect(EmployeeModel.get).toHaveBeenCalledWith(tokenData.nik);
       expect(result).toBeNull();
@@ -94,7 +94,7 @@ describe('auth service test', () => {
       (verify as jest.Mock).mockReturnValue(tokenData);
       (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
 
-      const result = await service.validateToken(token);
+      const result = await service.handleValidateToken(token);
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
       expect(EmployeeModel.get).toHaveBeenCalledWith(tokenData.nik);
       expect(result).toEqual(employeeMock);

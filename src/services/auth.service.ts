@@ -23,7 +23,7 @@ export class AuthService {
     };
   }
 
-  async validateToken(token: string) {
+  async handleValidateToken(token: string) {
     let tokenData: { nik: string };
 
     try {
