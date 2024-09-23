@@ -8,7 +8,7 @@ export class EmployeeService {
     const employee = await EmployeeModel.get(nik);
 
     if (!employee) {
-      throw new NotFoundException('Karyawan tidak ditemukan!');
+      throw new NotFoundException('karyawan tidak ditemukan!');
     }
 
     return employee.toJson();

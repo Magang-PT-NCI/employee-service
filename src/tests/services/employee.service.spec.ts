@@ -36,7 +36,7 @@ describe('employee service test', () => {
       NotFoundException,
     );
     await expect(service.handleGetEmployee(nik)).rejects.toThrow(
-      'Karyawan tidak ditemukan!',
+      'karyawan tidak ditemukan!',
     );
   });
 

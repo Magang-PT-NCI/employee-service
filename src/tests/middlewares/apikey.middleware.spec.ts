@@ -21,7 +21,7 @@ describe('api key middleware test', () => {
   });
 
   it('should throw BadRequestException when api key is not sent', () => {
-    const badRequest = new BadRequestException('Api key harus dikirimkan!');
+    const badRequest = new BadRequestException('api key harus dikirimkan!');
 
     (mockRequest.get as jest.Mock).mockReturnValue(undefined);
 
@@ -36,7 +36,7 @@ describe('api key middleware test', () => {
   });
 
   it('should throw BadRequestException when api key is not valid', () => {
-    const badRequest = new BadRequestException('Api key tidak valid!');
+    const badRequest = new BadRequestException('api key tidak valid!');
 
     (mockRequest.get as jest.Mock).mockReturnValue('abc');
     (service.verifyApiKey as jest.Mock).mockReturnValue(false);

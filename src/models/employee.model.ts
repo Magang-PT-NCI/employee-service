@@ -35,6 +35,10 @@ export class EmployeeModel {
     return employee;
   }
 
+  getProfilePhoto(): string {
+    return `https://lh3.googleusercontent.com/d/${this.profilePhoto}=s220`;
+  }
+
   toJson(): string {
     return JSON.stringify({
       nik: this.nik,
@@ -42,7 +46,6 @@ export class EmployeeModel {
       area: this.area,
       role: this.role,
       position: this.position,
-      profile_photo: `https://lh3.googleusercontent.com/d/${this.profilePhoto}=s220`,
     });
   }
 }

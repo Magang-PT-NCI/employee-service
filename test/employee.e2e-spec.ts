@@ -21,7 +21,7 @@ describe('employee controller (e2e)', () => {
       .get(`/employee/${nik}`)
       .expect(400)
       .expect({
-        message: 'Api key harus dikirimkan!',
+        message: 'api key harus dikirimkan!',
         error: 'Bad Request',
         statusCode: 400,
       });
@@ -34,7 +34,7 @@ describe('employee controller (e2e)', () => {
       .set('x-api-key', 'abc')
       .expect(400)
       .expect({
-        message: 'Api key tidak valid!',
+        message: 'api key tidak valid!',
         error: 'Bad Request',
         statusCode: 400,
       });
@@ -50,9 +50,6 @@ describe('employee controller (e2e)', () => {
     expect(response.body.nik).toBe(nik);
     expect(response.body.name).toBe('Aditya Wijaya Putra');
     expect(response.body.position).toBe('OnSite');
-    expect(response.body.profile_photo).toBe(
-      'https://lh3.googleusercontent.com/d/17ZxcvViTexCuS_j_Vve2CKTyHG7iu0aY=s220',
-    );
     expect(response.body.area).toBeDefined();
     expect(response.body.role).toBeDefined();
   });
@@ -64,7 +61,7 @@ describe('employee controller (e2e)', () => {
       .set('x-api-key', '3f9cA1b7X5e4P8k9M2rQ6tJ8uY3sL7dZ')
       .expect(404)
       .expect({
-        message: 'Karyawan tidak ditemukan!',
+        message: 'karyawan tidak ditemukan!',
         error: 'Not Found',
         statusCode: 404,
       });
