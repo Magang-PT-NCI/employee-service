@@ -3,10 +3,10 @@ import { EmployeeService } from '../services/employee.service';
 
 @Controller('employee')
 export class EmployeeController {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(private readonly service: EmployeeService) {}
 
   @Get(':nik')
   async getEmployee(@Param('nik') nik: string): Promise<string> {
-    return await this.employeeService.handleGetEmployee(nik);
+    return await this.service.handleGetEmployee(nik);
   }
 }
