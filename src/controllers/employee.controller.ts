@@ -6,7 +6,7 @@ export class EmployeeController {
   constructor(private readonly service: EmployeeService) {}
 
   @Get(':nik')
-  async getEmployee(@Param('nik') nik: string): Promise<string> {
+  async getEmployee(@Param('nik') nik: string) {
     return await this.service.handleGetEmployee(nik);
   }
 }
