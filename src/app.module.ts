@@ -3,11 +3,13 @@ import { HttpMiddleware } from './middlewares/http.middleware';
 import { EmployeeService } from './services/employee.service';
 import { EmployeeController } from './controllers/employee.controller';
 import { ApikeyMiddleware } from './middlewares/apikey.middleware';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [],
-  controllers: [EmployeeController],
-  providers: [EmployeeService],
+  controllers: [AuthController, EmployeeController],
+  providers: [AuthService, EmployeeService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

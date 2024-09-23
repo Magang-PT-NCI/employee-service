@@ -61,7 +61,7 @@ describe('employee controller (e2e)', () => {
       .set('x-api-key', '3f9cA1b7X5e4P8k9M2rQ6tJ8uY3sL7dZ')
       .expect(404)
       .expect({
-        message: 'Karyawan tidak ditemukan!',
+        message: 'karyawan tidak ditemukan!',
         error: 'Not Found',
         statusCode: 404,
       });

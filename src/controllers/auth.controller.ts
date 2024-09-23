@@ -1,19 +1,25 @@
 import {
   BadRequestException,
   Controller,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { LoginRequest, TokenValidationRequest } from '../types/request.types';
+import { logFormat, logger } from '../utils/logger.utils';
 
 @Controller()
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Req() req: LoginRequest) {
+    logger.debug(`request body: ${logFormat(req.body)}`);
+
     const { nik, password } = req.body;
 
     if (!nik) {
@@ -34,7 +40,10 @@ export class AuthController {
   }
 
   @Post('validate_token')
+  @HttpCode(HttpStatus.OK)
   async validateToken(@Req() req: TokenValidationRequest) {
+    logger.debug(`request body: ${logFormat(req.body)}`);
+
     const { token } = req.body;
 
     if (!token) {
