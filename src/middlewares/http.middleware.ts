@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { logFormat, logger } from '../utils/logger.utils';
 
 @Injectable()
-export class LoggerMiddleware implements NestMiddleware {
+export class HttpMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const start = Date.now();
     logger.http(`${req.method} ${req.originalUrl}`);
@@ -22,6 +22,7 @@ export class LoggerMiddleware implements NestMiddleware {
       );
     });
 
+    res.setHeader('Content-Type', 'application/json');
     next();
   }
 }

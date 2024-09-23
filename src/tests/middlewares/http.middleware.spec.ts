@@ -1,18 +1,18 @@
-import { LoggerMiddleware } from '../../middlewares/logger.middleware';
+import { HttpMiddleware } from '../../middlewares/http.middleware';
 import { Request, Response, NextFunction } from 'express';
 import { logFormat, logger } from '../../utils/logger.utils';
 
 jest.mock('../../utils/logger.utils');
 
-describe('logger middleware test', () => {
-  let middleware: LoggerMiddleware;
+describe('http middleware test', () => {
+  let middleware: HttpMiddleware;
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockNext: NextFunction;
   let sendMock: jest.Mock;
 
   beforeEach(() => {
-    middleware = new LoggerMiddleware();
+    middleware = new HttpMiddleware();
     mockRequest = {
       method: 'GET',
       originalUrl: '/test-url',
@@ -23,6 +23,7 @@ describe('logger middleware test', () => {
       statusMessage: 'OK',
       send: sendMock,
       on: jest.fn(),
+      setHeader: jest.fn(),
     };
     mockNext = jest.fn();
   });
@@ -60,6 +61,15 @@ describe('logger middleware test', () => {
 
     expect(logger.http).toHaveBeenCalledWith(
       expect.stringContaining('GET /test-url - 200 OK -'),
+    );
+  });
+
+  it('should set response header content-type to application/json', () => {
+    middleware.use(mockRequest as Request, mockResponse as Response, mockNext);
+
+    expect(mockResponse.setHeader).toHaveBeenCalledWith(
+      'Content-Type',
+      'application/json',
     );
   });
 });

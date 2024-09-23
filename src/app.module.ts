@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { HttpMiddleware } from './middlewares/http.middleware';
 import { EmployeeService } from './services/employee.service';
 import { EmployeeController } from './controllers/employee.controller';
 
@@ -10,6 +10,6 @@ import { EmployeeController } from './controllers/employee.controller';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(HttpMiddleware).forRoutes('*');
   }
 }
