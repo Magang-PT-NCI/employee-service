@@ -1,9 +1,9 @@
 import { createLogger, format } from 'winston';
 import { Console, File } from 'winston/lib/winston/transports';
 import {
-  loggerFileFlag,
-  loggerLevel,
-  loggerTransport,
+  FILE_FLAG,
+  LEVEL,
+  TRANSPORT,
 } from '../config/logger.config';
 import { CommonUtils } from './common.utils';
 
@@ -23,20 +23,20 @@ export const logFormat = (data: any) => {
 
 const fileOptions = {
   filename: 'employee-service.log',
-  options: { loggerFileFlag },
+  options: { loggerFileFlag: FILE_FLAG },
 };
 const transports = [];
 
-if (loggerTransport.toLowerCase() === 'file') {
+if (TRANSPORT.toLowerCase() === 'file') {
   transports.push(new File(fileOptions));
-} else if (loggerTransport.toLowerCase() === 'both') {
+} else if (TRANSPORT.toLowerCase() === 'both') {
   transports.push(new Console({}), new File(fileOptions));
 } else {
   transports.push(new Console({}));
 }
 
 export const logger = createLogger({
-  level: loggerLevel,
+  level: LEVEL,
   transports,
   format: format.printf((info) => {
     const date = new Date();

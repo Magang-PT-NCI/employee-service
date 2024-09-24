@@ -48,21 +48,21 @@ const createEmployee = async (user: any) => {
 };
 
 const main = async () => {
-  createEmployee({ name: 'Aditya Wijaya Putra' });
-  createEmployee({ name: 'Rina Andriani' });
-  createEmployee({ name: 'Budi Santoso' });
-  createEmployee({ name: 'Maria Hadiyanti' });
-  createEmployee({ name: 'Dewa Prasetyo' });
-  createEmployee({ name: 'Dini Kusuma Wardani' });
-  createEmployee({ name: 'Arif Rahman Hakim' });
-  createEmployee({ name: 'Lestari Wulandari', position: 'Koordinator' });
-  createEmployee({ name: 'Indra Gunawan' });
-  createEmployee({ name: 'Siti Fatimah' });
-  createEmployee({ name: 'Agus Supriadi' });
-  createEmployee({ name: 'Retno Maharani' });
-  createEmployee({ name: 'Eko Saputro' });
-  createEmployee({ name: 'Yuli Kartika Sari' });
-  createEmployee({ name: 'Joko Susanto', position: 'Koordinator' });
+  await createEmployee({ name: 'Aditya Wijaya Putra' });
+  await createEmployee({ name: 'Rina Andriani' });
+  await createEmployee({ name: 'Budi Santoso' });
+  await createEmployee({ name: 'Maria Hadiyanti' });
+  await createEmployee({ name: 'Dewa Prasetyo' });
+  await createEmployee({ name: 'Dini Kusuma Wardani' });
+  await createEmployee({ name: 'Arif Rahman Hakim' });
+  await createEmployee({ name: 'Lestari Wulandari', position: 'Koordinator' });
+  await createEmployee({ name: 'Indra Gunawan' });
+  await createEmployee({ name: 'Siti Fatimah' });
+  await createEmployee({ name: 'Agus Supriadi' });
+  await createEmployee({ name: 'Retno Maharani' });
+  await createEmployee({ name: 'Eko Saputro' });
+  await createEmployee({ name: 'Yuli Kartika Sari' });
+  await createEmployee({ name: 'Joko Susanto', position: 'Koordinator' });
 
   await prisma.apiKey.createMany({
     data: [
