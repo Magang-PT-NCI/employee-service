@@ -1,12 +1,18 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { EmployeeService } from '../services/employee.service';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiEmployee } from '../decorators/api-employee.decorator';
+import { EmployeeParams } from '../dto/employee.dto';
 
 @Controller('employee')
+@ApiTags('Employee')
+@ApiSecurity('apiKey')
 export class EmployeeController {
   constructor(private readonly service: EmployeeService) {}
 
   @Get(':nik')
-  async getEmployee(@Param('nik') nik: string) {
-    return await this.service.handleGetEmployee(nik);
+  @ApiEmployee()
+  async getEmployee(@Param() params: EmployeeParams) {
+    return await this.service.handleGetEmployee(params.nik);
   }
 }

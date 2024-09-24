@@ -1,26 +1,30 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { LoginRequest, TokenValidationRequest } from '../types/request.types';
 import { logFormat, logger } from '../utils/logger.utils';
+import { LoginReqBody, ValidateTokenReqBody } from '../dto/auth.dto';
+import { ApiLogin, ApiValidateToken } from '../decorators/api-auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req: LoginRequest) {
-    logger.debug(`request body: ${logFormat(req.body)}`);
+  @ApiLogin()
+  async login(@Body() reqBody: LoginReqBody) {
+    logger.debug(`request body: ${logFormat(reqBody)}`);
 
-    const { nik, password } = req.body;
+    const { nik, password } = reqBody;
 
     if (!nik) {
       throw new BadRequestException('nik harus diisi!');
@@ -41,10 +45,11 @@ export class AuthController {
 
   @Post('validate_token')
   @HttpCode(HttpStatus.OK)
-  async validateToken(@Req() req: TokenValidationRequest) {
-    logger.debug(`request body: ${logFormat(req.body)}`);
+  @ApiValidateToken()
+  async validateToken(@Body() reqBody: ValidateTokenReqBody) {
+    logger.debug(`request body: ${logFormat(reqBody)}`);
 
-    const { token } = req.body;
+    const { token } = reqBody;
 
     if (!token) {
       throw new BadRequestException('token harus diisi!');

@@ -4,6 +4,7 @@ import { compareSync } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/app.config';
 import { logger } from '../utils/logger.utils';
+import { LoginResBody } from '../dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
     return {
       user_role: employee.position,
       token: sign({ nik: employee.nik }, SECRET_KEY, { expiresIn: '1w' }),
-    };
+    } as LoginResBody;
   }
 
   async handleValidateToken(token: string) {
