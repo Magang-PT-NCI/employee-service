@@ -16,7 +16,7 @@ describe('employee service test', () => {
   it('should return employee data when employee is found', async () => {
     const nik = '123456';
     const mockEmployee = {
-      toJson: jest.fn().mockReturnValue({ name: 'John Doe' }),
+      getResData: jest.fn().mockReturnValue({ name: 'John Doe' }),
     };
 
     (EmployeeModel.get as jest.Mock).mockResolvedValue(mockEmployee);

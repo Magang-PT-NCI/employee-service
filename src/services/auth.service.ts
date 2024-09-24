@@ -5,12 +5,13 @@ import { sign, verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/app.config';
 import { logger } from '../utils/logger.utils';
 import { LoginResBody } from '../dto/auth.dto';
+import { TokenPayload } from '../types/auth.types';
 
 @Injectable()
 export class AuthService {
-  async handleLogin(nik: string, password: string) {
-    const employee = await EmployeeModel.get(nik);
-    const isPasswordValid = employee
+  async handleLogin(nik: string, password: string): Promise<LoginResBody> {
+    const employee: EmployeeModel = await EmployeeModel.get(nik);
+    const isPasswordValid: boolean = employee
       ? compareSync(password, employee.password)
       : false;
 
@@ -21,20 +22,20 @@ export class AuthService {
     return {
       user_role: employee.position,
       token: sign({ nik: employee.nik }, SECRET_KEY, { expiresIn: '1w' }),
-    } as LoginResBody;
+    };
   }
 
-  async handleValidateToken(token: string) {
-    let tokenData: { nik: string };
+  async handleValidateToken(token: string): Promise<EmployeeModel> {
+    let tokenData: TokenPayload;
 
     try {
-      tokenData = verify(token, SECRET_KEY) as { nik: string };
+      tokenData = verify(token, SECRET_KEY) as TokenPayload;
     } catch (err) {
       logger.error(err);
       return null;
     }
 
-    const employee = await EmployeeModel.get(tokenData.nik);
+    const employee: EmployeeModel = await EmployeeModel.get(tokenData.nik);
 
     if (!employee) {
       return null;

@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ApiBadRequest, ApiUnauthorized } from './api-response.decorator';
 import { LoginResBody, ValidateTokenResBody } from '../dto/auth.dto';
 
-export const ApiLogin = () => {
+export const ApiLogin = (): MethodDecorator => {
   return applyDecorators(
     ApiOperation({
       summary: 'perform login',
@@ -19,7 +19,7 @@ export const ApiLogin = () => {
   );
 };
 
-export const ApiValidateToken = () => {
+export const ApiValidateToken = (): MethodDecorator => {
   return applyDecorators(
     ApiOperation({
       summary: 'validate token',

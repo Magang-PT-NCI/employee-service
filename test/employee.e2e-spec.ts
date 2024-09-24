@@ -16,7 +16,7 @@ describe('employee controller (e2e)', () => {
   });
 
   it('should fail to request /employee/:nik (GET) without api key', async () => {
-    const nik = '001230045600701';
+    const nik: string = '001230045600701';
     await request(app.getHttpServer())
       .get(`/employee/${nik}`)
       .expect(400)
@@ -28,7 +28,7 @@ describe('employee controller (e2e)', () => {
   });
 
   it('should fail to request /employee/:nik (GET) with invalid api key', async () => {
-    const nik = '001230045600701';
+    const nik: string = '001230045600701';
     await request(app.getHttpServer())
       .get(`/employee/${nik}`)
       .set('x-api-key', 'abc')
@@ -41,7 +41,7 @@ describe('employee controller (e2e)', () => {
   });
 
   it('should success to request /employee/:nik (GET)', async () => {
-    const nik = '001230045600701';
+    const nik: string = '001230045600701';
     const response = await request(app.getHttpServer())
       .get(`/employee/${nik}`)
       .set('x-api-key', '3f9cA1b7X5e4P8k9M2rQ6tJ8uY3sL7dZ')
@@ -55,7 +55,7 @@ describe('employee controller (e2e)', () => {
   });
 
   it('should fail to request /employee/:nik (GET) not exists nik', async () => {
-    const nik = '001230045600700';
+    const nik: string = '001230045600700';
     await request(app.getHttpServer())
       .get(`/employee/${nik}`)
       .set('x-api-key', '3f9cA1b7X5e4P8k9M2rQ6tJ8uY3sL7dZ')

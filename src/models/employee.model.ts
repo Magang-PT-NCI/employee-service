@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { getPrismaClient } from '../utils/prisma.utils';
-
-export type Position = 'OnSite' | 'Koordinator';
+import { EmployeeResBody } from '../dto/employee.dto';
+import { Position } from '../types/employee.types';
+import { Employee } from '../interfaces/prisma.interfaces';
 
 export class EmployeeModel {
   private static prisma: PrismaClient = getPrismaClient();
@@ -15,7 +16,7 @@ export class EmployeeModel {
   public profilePhoto: string;
 
   static async get(nik: string): Promise<EmployeeModel | null> {
-    const result = await EmployeeModel.prisma.employee.findUnique({
+    const result: Employee = await EmployeeModel.prisma.employee.findUnique({
       where: { nik },
     });
 
@@ -39,13 +40,13 @@ export class EmployeeModel {
     return `https://lh3.googleusercontent.com/d/${this.profilePhoto}=s220`;
   }
 
-  toJson(): string {
-    return JSON.stringify({
+  getResData(): EmployeeResBody {
+    return {
       nik: this.nik,
       name: this.name,
       area: this.area,
       role: this.role,
       position: this.position,
-    });
+    };
   }
 }

@@ -4,8 +4,8 @@ import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
 
 describe('auth controller (e2e)', () => {
-  const nik = '001230045600701';
-  const password = 'adityawijaya123';
+  const nik: string = '001230045600701';
+  const password: string = 'adityawijaya123';
   let app: INestApplication;
 
   beforeEach(async () => {
