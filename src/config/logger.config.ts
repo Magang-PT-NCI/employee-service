@@ -19,6 +19,6 @@ if (!validLevel.includes(level)) {
 
 const flags = (process.env.LOGGER_FILE_FLAG || 'override').toLowerCase();
 
-export const loggerTransport = process.env.LOGGER_TRANSPORT || 'console';
-export const loggerLevel = level;
-export const loggerFileFlag = flags === 'append' ? 'a' : 'w';
+export const TRANSPORT = process.env.LOGGER_TRANSPORT || 'console';
+export const LEVEL = level;
+export const FILE_FLAG = flags === 'append' ? 'a' : 'w';

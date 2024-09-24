@@ -33,11 +33,9 @@ describe('employee service test', () => {
     (EmployeeModel.get as jest.Mock).mockResolvedValue(null);
 
     await expect(service.handleGetEmployee(nik)).rejects.toThrow(
-      NotFoundException,
+      new NotFoundException('karyawan tidak ditemukan!'),
     );
-    await expect(service.handleGetEmployee(nik)).rejects.toThrow(
-      'karyawan tidak ditemukan!',
-    );
+    expect(EmployeeModel.get).toHaveBeenCalledWith(nik);
   });
 
   it('should return correct value for api key validation', async () => {
