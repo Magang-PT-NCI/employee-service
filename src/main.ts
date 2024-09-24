@@ -2,15 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PORT } from './config/app.config';
 import { logger } from './utils/logger.utils';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { INestApplication } from '@nestjs/common';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+async function bootstrap(): Promise<void> {
+  const app: INestApplication = await NestFactory.create(AppModule);
   app.enableCors();
 
   logger.info(`Application started on port ${PORT}`);
 
-  const config = new DocumentBuilder()
+  const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
     .setTitle('Employee Service API')
     .setDescription('API documentation for Employee Service')
     .setVersion('1.0.0')
@@ -19,7 +20,7 @@ async function bootstrap() {
     .addTag('Auth')
 
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   await app.listen(PORT);

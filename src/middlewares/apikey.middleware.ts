@@ -11,13 +11,13 @@ export class ApikeyMiddleware implements NestMiddleware {
   constructor(private readonly service: EmployeeService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const apiKey = req.get('X-API-KEY');
+    const apiKey: string = req.get('X-API-KEY');
 
     if (!apiKey) {
       throw new BadRequestException('api key harus dikirimkan!');
     }
 
-    const verifiedApiKey = await this.service.verifyApiKey(apiKey);
+    const verifiedApiKey: boolean = await this.service.verifyApiKey(apiKey);
     if (!verifiedApiKey) {
       throw new BadRequestException('api key tidak valid!');
     }

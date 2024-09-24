@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 
 config();
 
-const validLevel = [
+const validLevel: string[] = [
   'error',
   'warn',
   'info',
@@ -12,13 +12,15 @@ const validLevel = [
   'silly',
 ];
 
-let level = process.env.LOGGER_LEVEL;
+let level: string = process.env.LOGGER_LEVEL;
 if (!validLevel.includes(level)) {
   level = 'http';
 }
 
-const flags = (process.env.LOGGER_FILE_FLAG || 'override').toLowerCase();
+const flags: string = (
+  process.env.LOGGER_FILE_FLAG || 'override'
+).toLowerCase();
 
-export const TRANSPORT = process.env.LOGGER_TRANSPORT || 'console';
-export const LEVEL = level;
-export const FILE_FLAG = flags === 'append' ? 'a' : 'w';
+export const TRANSPORT: string = process.env.LOGGER_TRANSPORT || 'console';
+export const LEVEL: string = level;
+export const FILE_FLAG: 'a' | 'w' = flags === 'append' ? 'a' : 'w';

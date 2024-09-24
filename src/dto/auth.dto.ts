@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Position } from '../models/employee.model';
+import { Position } from '../types/employee.types';
 
 export class LoginReqBody {
   @ApiProperty({ example: '123456789' })

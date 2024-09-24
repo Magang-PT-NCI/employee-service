@@ -9,9 +9,15 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { logFormat, logger } from '../utils/logger.utils';
-import { LoginReqBody, ValidateTokenReqBody } from '../dto/auth.dto';
+import {
+  LoginReqBody,
+  LoginResBody,
+  ValidateTokenReqBody,
+  ValidateTokenResBody,
+} from '../dto/auth.dto';
 import { ApiLogin, ApiValidateToken } from '../decorators/api-auth.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { EmployeeModel } from '../models/employee.model';
 
 @Controller()
 @ApiTags('Auth')
@@ -21,7 +27,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiLogin()
-  async login(@Body() reqBody: LoginReqBody) {
+  async login(@Body() reqBody: LoginReqBody): Promise<LoginResBody> {
     logger.debug(`request body: ${logFormat(reqBody)}`);
 
     const { nik, password } = reqBody;
@@ -34,7 +40,7 @@ export class AuthController {
       throw new BadRequestException('password harus diisi!');
     }
 
-    const result = await this.service.handleLogin(nik, password);
+    const result: LoginResBody = await this.service.handleLogin(nik, password);
 
     if (!result) {
       throw new UnauthorizedException('nik atau password salah!');
@@ -46,7 +52,9 @@ export class AuthController {
   @Post('validate_token')
   @HttpCode(HttpStatus.OK)
   @ApiValidateToken()
-  async validateToken(@Body() reqBody: ValidateTokenReqBody) {
+  async validateToken(
+    @Body() reqBody: ValidateTokenReqBody,
+  ): Promise<ValidateTokenResBody> {
     logger.debug(`request body: ${logFormat(reqBody)}`);
 
     const { token } = reqBody;
@@ -55,7 +63,8 @@ export class AuthController {
       throw new BadRequestException('token harus diisi!');
     }
 
-    const employee = await this.service.handleValidateToken(token);
+    const employee: EmployeeModel =
+      await this.service.handleValidateToken(token);
 
     if (!employee) {
       throw new UnauthorizedException('token tidak valid!');
@@ -64,6 +73,6 @@ export class AuthController {
     return {
       nik: employee.nik,
       profile_photo: employee.getProfilePhoto(),
-    };
+    } as ValidateTokenResBody;
   }
 }

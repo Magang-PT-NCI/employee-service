@@ -7,7 +7,7 @@ import {
 } from './api-response.decorator';
 import { EmployeeResBody } from '../dto/employee.dto';
 
-export const ApiEmployee = () => {
+export const ApiEmployee = (): MethodDecorator => {
   return applyDecorators(
     ApiOperation({
       summary: 'get employee',
