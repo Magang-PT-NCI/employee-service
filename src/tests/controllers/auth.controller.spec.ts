@@ -3,11 +3,8 @@ import { AuthService } from '../../services/auth.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Request } from 'express';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import {
-  LoginRequest,
-  TokenValidationRequest,
-} from '../../types/request.types';
 import { EmployeeModel } from '../../models/employee.model';
+import { LoginReqBody, ValidateTokenReqBody } from '../../dto/auth.dto';
 
 jest.mock('../../models/employee.model');
 
@@ -41,7 +38,7 @@ describe('auth controller test', () => {
       mockRequest.body.password = 'abc';
 
       await expect(
-        controller.login(mockRequest as LoginRequest),
+        controller.login(mockRequest.body as LoginReqBody),
       ).rejects.toThrow(new BadRequestException('nik harus diisi!'));
     });
 
@@ -49,7 +46,7 @@ describe('auth controller test', () => {
       mockRequest.body.nik = '123';
 
       await expect(
-        controller.login(mockRequest as LoginRequest),
+        controller.login(mockRequest.body as LoginReqBody),
       ).rejects.toThrow(new BadRequestException('password harus diisi!'));
     });
 
@@ -60,7 +57,7 @@ describe('auth controller test', () => {
       (service.handleLogin as jest.Mock).mockReturnValue(null);
 
       await expect(
-        controller.login(mockRequest as LoginRequest),
+        controller.login(mockRequest.body as LoginReqBody),
       ).rejects.toThrow(new UnauthorizedException('nik atau password salah!'));
       expect(service.handleLogin).toHaveBeenCalledWith(
         mockRequest.body.nik,
@@ -79,7 +76,7 @@ describe('auth controller test', () => {
 
       (service.handleLogin as jest.Mock).mockReturnValue(mockResult);
 
-      const result = await controller.login(mockRequest as LoginRequest);
+      const result = await controller.login(mockRequest.body as LoginReqBody);
       expect(result).toEqual(mockResult);
       expect(service.handleLogin).toHaveBeenCalledWith(
         mockRequest.body.nik,
@@ -91,7 +88,7 @@ describe('auth controller test', () => {
   describe('token validation test', () => {
     it('should throw BadRequestException when token is not provided', async () => {
       await expect(
-        controller.validateToken(mockRequest as TokenValidationRequest),
+        controller.validateToken(mockRequest.body as ValidateTokenReqBody),
       ).rejects.toThrow(new BadRequestException('token harus diisi!'));
     });
 
@@ -101,7 +98,7 @@ describe('auth controller test', () => {
       (service.handleValidateToken as jest.Mock).mockReturnValue(null);
 
       await expect(
-        controller.validateToken(mockRequest as TokenValidationRequest),
+        controller.validateToken(mockRequest.body as ValidateTokenReqBody),
       ).rejects.toThrow(new UnauthorizedException('token tidak valid!'));
       expect(service.handleValidateToken).toHaveBeenCalledWith(
         mockRequest.body.token,
@@ -121,7 +118,7 @@ describe('auth controller test', () => {
       );
 
       const result = await controller.validateToken(
-        mockRequest as TokenValidationRequest,
+        mockRequest.body as ValidateTokenReqBody,
       );
       expect(service.handleValidateToken).toHaveBeenCalledWith(
         mockRequest.body.token,
