@@ -73,6 +73,7 @@ export class AuthController {
     return {
       nik: employee.nik,
       profile_photo: employee.getProfilePhoto(),
+      user_role: employee.position,
     } as ValidateTokenResBody;
   }
 }

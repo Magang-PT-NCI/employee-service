@@ -105,12 +105,13 @@ describe('auth controller test', () => {
       );
     });
 
-    it('should succes to validate token', async () => {
+    it('should success to validate token', async () => {
       mockRequest.body.token = 'abc';
 
       const employee = new EmployeeModel();
       employee.nik = '123';
       employee.profilePhoto = 'coba.png';
+      employee.position = 'OnSite';
 
       (service.handleValidateToken as jest.Mock).mockReturnValue(employee);
       (employee.getProfilePhoto as jest.Mock).mockReturnValue(
@@ -127,6 +128,7 @@ describe('auth controller test', () => {
       expect(result).toEqual({
         nik: employee.nik,
         profile_photo: employee.getProfilePhoto(),
+        user_role: 'OnSite',
       });
     });
   });
