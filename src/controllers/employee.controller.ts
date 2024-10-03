@@ -7,6 +7,7 @@ import { EmployeeParams, EmployeeResBody } from '../dto/employee.dto';
 @Controller('employee')
 @ApiTags('Employee')
 @ApiSecurity('apiKey')
+@ApiSecurity('jwt')
 export class EmployeeController {
   public constructor(private readonly service: EmployeeService) {}
 

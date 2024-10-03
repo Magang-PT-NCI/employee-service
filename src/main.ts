@@ -16,6 +16,14 @@ async function bootstrap(): Promise<void> {
     .setDescription('API documentation for Employee Service')
     .setVersion('1.0.0')
     .addApiKey({ type: 'apiKey', name: 'X-API-KEY', in: 'header' }, 'apiKey')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'jwt',
+    )
     .addTag('Employee')
     .addTag('Auth')
 
