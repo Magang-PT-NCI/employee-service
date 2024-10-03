@@ -44,7 +44,12 @@ describe('auth service test', () => {
     it('should return token for valid request', async () => {
       const nik = '123';
       const password = 'abc';
-      const employeeMock = { nik, password, position: 'Onsite' };
+      const employeeMock = {
+        nik,
+        password,
+        position: 'Onsite',
+        getProfilePhoto: jest.fn().mockReturnValue('default.png'),
+      };
 
       (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
       (compareSync as jest.Mock).mockReturnValue(true);

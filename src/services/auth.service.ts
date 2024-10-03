@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { EmployeeModel } from '../models/employee.model';
 import { compareSync } from 'bcrypt';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/app.config';
-import { logger } from '../utils/logger.utils';
 import { LoginResBody } from '../dto/auth.dto';
 import { TokenPayload } from '../types/auth.types';
+import { ServiceAuthUtils } from '../utils/service-auth.utils';
 
 @Injectable()
 export class AuthService {
@@ -20,18 +20,17 @@ export class AuthService {
     }
 
     return {
+      nik: employee.nik,
       user_role: employee.position,
+      profile_photo: employee.getProfilePhoto(),
       token: sign({ nik: employee.nik }, SECRET_KEY, { expiresIn: '1w' }),
     };
   }
 
   async handleValidateToken(token: string): Promise<EmployeeModel> {
-    let tokenData: TokenPayload;
+    const tokenData: TokenPayload = ServiceAuthUtils.validateToken(token);
 
-    try {
-      tokenData = verify(token, SECRET_KEY) as TokenPayload;
-    } catch (err) {
-      logger.error(err);
+    if (!tokenData) {
       return null;
     }
 

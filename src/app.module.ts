@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HttpMiddleware } from './middlewares/http.middleware';
 import { EmployeeService } from './services/employee.service';
 import { EmployeeController } from './controllers/employee.controller';
-import { ApikeyMiddleware } from './middlewares/apikey.middleware';
+import { ServiceAuthMiddleware } from './middlewares/service-auth.middleware';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 
@@ -14,6 +14,6 @@ import { AuthService } from './services/auth.service';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(HttpMiddleware).forRoutes('*');
-    consumer.apply(ApikeyMiddleware).forRoutes('/employee/:nik');
+    consumer.apply(ServiceAuthMiddleware).forRoutes('/employee/:nik');
   }
 }
