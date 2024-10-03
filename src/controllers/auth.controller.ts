@@ -22,12 +22,12 @@ import { EmployeeModel } from '../models/employee.model';
 @Controller()
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  public constructor(private readonly service: AuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiLogin()
-  async login(@Body() reqBody: LoginReqBody): Promise<LoginResBody> {
+  public async login(@Body() reqBody: LoginReqBody): Promise<LoginResBody> {
     logger.debug(`request body: ${logFormat(reqBody)}`);
 
     const { nik, password } = reqBody;
@@ -52,7 +52,7 @@ export class AuthController {
   @Post('validate_token')
   @HttpCode(HttpStatus.OK)
   @ApiValidateToken()
-  async validateToken(
+  public async validateToken(
     @Body() reqBody: ValidateTokenReqBody,
   ): Promise<ValidateTokenResBody> {
     logger.debug(`request body: ${logFormat(reqBody)}`);

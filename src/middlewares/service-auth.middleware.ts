@@ -10,7 +10,7 @@ import { TokenPayload } from '../types/auth.types';
 
 @Injectable()
 export class ServiceAuthMiddleware implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
+  public async use(req: Request, res: Response, next: NextFunction) {
     const apiKey: string = req.get('X-API-KEY');
     const headerToken: string = req.get('Authorization');
 
