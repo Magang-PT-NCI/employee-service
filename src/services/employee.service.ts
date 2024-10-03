@@ -4,7 +4,7 @@ import { EmployeeResBody } from '../dto/employee.dto';
 
 @Injectable()
 export class EmployeeService {
-  async handleGetEmployee(nik: string): Promise<EmployeeResBody> {
+  public async handleGetEmployee(nik: string): Promise<EmployeeResBody> {
     const employee: EmployeeModel = await EmployeeModel.get(nik);
 
     if (!employee) {

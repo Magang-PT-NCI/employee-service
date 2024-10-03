@@ -9,7 +9,10 @@ import { ServiceAuthUtils } from '../utils/service-auth.utils';
 
 @Injectable()
 export class AuthService {
-  async handleLogin(nik: string, password: string): Promise<LoginResBody> {
+  public async handleLogin(
+    nik: string,
+    password: string,
+  ): Promise<LoginResBody> {
     const employee: EmployeeModel = await EmployeeModel.get(nik);
     const isPasswordValid: boolean = employee
       ? compareSync(password, employee.password)
@@ -27,7 +30,7 @@ export class AuthService {
     };
   }
 
-  async handleValidateToken(token: string): Promise<EmployeeModel> {
+  public async handleValidateToken(token: string): Promise<EmployeeModel> {
     const tokenData: TokenPayload = ServiceAuthUtils.validateToken(token);
 
     if (!tokenData) {

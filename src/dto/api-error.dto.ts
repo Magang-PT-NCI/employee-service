@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ErrorResBody {
   @ApiProperty({ description: 'error message' })
-  message: string;
+  public readonly message: string;
 
   @ApiProperty({ description: 'error type' })
-  error: string;
+  public readonly error: string;
 
   @ApiProperty({ description: 'error status code' })
-  statusCode: number;
+  public readonly statusCode: number;
 }

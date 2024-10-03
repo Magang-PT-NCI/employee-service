@@ -15,7 +15,7 @@ export class EmployeeModel {
   public position: Position;
   public profilePhoto: string;
 
-  static async get(nik: string): Promise<EmployeeModel | null> {
+  public static async get(nik: string): Promise<EmployeeModel | null> {
     const result: Employee = await EmployeeModel.prisma.employee.findUnique({
       where: { nik },
     });
@@ -36,11 +36,11 @@ export class EmployeeModel {
     return employee;
   }
 
-  getProfilePhoto(): string {
+  public getProfilePhoto(): string {
     return `https://lh3.googleusercontent.com/d/${this.profilePhoto}=s220`;
   }
 
-  getResData(): EmployeeResBody {
+  public getResData(): EmployeeResBody {
     return {
       nik: this.nik,
       name: this.name,

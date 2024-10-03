@@ -8,11 +8,11 @@ import { EmployeeParams, EmployeeResBody } from '../dto/employee.dto';
 @ApiTags('Employee')
 @ApiSecurity('apiKey')
 export class EmployeeController {
-  constructor(private readonly service: EmployeeService) {}
+  public constructor(private readonly service: EmployeeService) {}
 
   @Get(':nik')
   @ApiEmployee()
-  async getEmployee(@Param() params: EmployeeParams): Promise<EmployeeResBody> {
+  public async getEmployee(@Param() params: EmployeeParams): Promise<EmployeeResBody> {
     return await this.service.handleGetEmployee(params.nik);
   }
 }
