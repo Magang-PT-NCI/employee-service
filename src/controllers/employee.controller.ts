@@ -13,7 +13,9 @@ export class EmployeeController {
 
   @Get(':nik')
   @ApiEmployee()
-  public async getEmployee(@Param() params: EmployeeParams): Promise<EmployeeResBody> {
+  public async getEmployee(
+    @Param() params: EmployeeParams,
+  ): Promise<EmployeeResBody> {
     return await this.service.handleGetEmployee(params.nik);
   }
 }
