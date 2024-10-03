@@ -10,8 +10,17 @@ export class LoginReqBody {
 }
 
 export class LoginResBody {
+  @ApiProperty({ example: '001230045600701' })
+  nik: string;
+
   @ApiProperty({ example: 'OnSite' })
   user_role: Position;
+
+  @ApiProperty({
+    example:
+      'https://lh3.googleusercontent.com/d/22ZximVkuhxCuS_j_Vve2CKTyHiju0aY=s220',
+  })
+  profile_photo: string;
 
   @ApiProperty({
     example:

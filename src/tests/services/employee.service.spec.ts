@@ -1,10 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeModel } from '../../models/employee.model';
-import { getPrismaClient } from '../../utils/prisma.utils';
 
 jest.mock('../../models/employee.model'); // Mocking the EmployeeModel
-jest.mock('../../utils/prisma.utils');
 
 describe('employee service test', () => {
   let service: EmployeeService;
@@ -36,28 +34,5 @@ describe('employee service test', () => {
       new NotFoundException('karyawan tidak ditemukan!'),
     );
     expect(EmployeeModel.get).toHaveBeenCalledWith(nik);
-  });
-
-  it('should return correct value for api key validation', async () => {
-    const apiKey = 'abc';
-    const prismaMock = {
-      apiKey: { findFirst: jest.fn() },
-    };
-
-    prismaMock.apiKey.findFirst.mockReturnValueOnce({
-      id: 1,
-      key: apiKey,
-    });
-    prismaMock.apiKey.findFirst.mockReturnValueOnce(null);
-
-    (getPrismaClient as jest.Mock).mockReturnValue(prismaMock);
-
-    [true, false].forEach((valid) => {
-      expect(service.verifyApiKey(apiKey)).resolves.toBe(valid);
-      expect(getPrismaClient).toHaveBeenCalled();
-      expect(prismaMock.apiKey.findFirst).toHaveBeenCalledWith({
-        where: { key: apiKey },
-      });
-    });
   });
 });

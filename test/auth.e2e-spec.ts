@@ -60,7 +60,11 @@ describe('auth controller (e2e)', () => {
         .send({ nik, password })
         .expect(200);
 
+      expect(response.body.nik).toBe(nik);
       expect(response.body.user_role).toBe('OnSite');
+      expect(response.body.profile_photo).toContain(
+        'https://lh3.googleusercontent.com/d/',
+      );
       expect(response.body.token).toBeDefined();
       expect(typeof response.body.token).toBe('string');
     });
