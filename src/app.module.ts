@@ -5,11 +5,12 @@ import { EmployeeController } from './controllers/employee.controller';
 import { ServiceAuthMiddleware } from './middlewares/service-auth.middleware';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
+import { PrismaService } from './services/prisma.service';
 
 @Module({
   imports: [],
   controllers: [AuthController, EmployeeController],
-  providers: [AuthService, EmployeeService],
+  providers: [AuthService, EmployeeService, PrismaService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

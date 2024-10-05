@@ -1,8 +1,7 @@
-import '../mocks/logger.mock';
+import { logger } from '../mocks/logger.mock';
 
 import { HttpMiddleware } from '../../middlewares/http.middleware';
 import { Request, Response, NextFunction } from 'express';
-import { createLogger, Logger } from 'winston';
 
 describe('http middleware test', () => {
   let middleware: HttpMiddleware;
@@ -10,8 +9,6 @@ describe('http middleware test', () => {
   let mockResponse: Partial<Response>;
   let mockNext: NextFunction;
   let sendMock: jest.Mock;
-
-  let logger: Logger;
 
   beforeEach(() => {
     middleware = new HttpMiddleware();
@@ -28,8 +25,6 @@ describe('http middleware test', () => {
       setHeader: jest.fn(),
     };
     mockNext = jest.fn();
-
-    logger = createLogger();
   });
 
   afterEach(() => {

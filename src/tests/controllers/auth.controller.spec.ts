@@ -3,10 +3,11 @@ import { AuthService } from '../../services/auth.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Request } from 'express';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { EmployeeModel } from '../../models/employee.model';
-import { LoginReqBody, ValidateTokenReqBody } from '../../dto/auth.dto';
-
-jest.mock('../../models/employee.model');
+import {
+  LoginReqBody,
+  ValidateTokenReqBody,
+  ValidateTokenResBody,
+} from '../../dto/auth.dto';
 
 describe('auth controller test', () => {
   let mockRequest: Partial<Request>;
@@ -51,14 +52,16 @@ describe('auth controller test', () => {
     });
 
     it('should throw UnauthorizedException for invalid nik or password', async () => {
+      const error = new UnauthorizedException('nik atau password salah!');
+
       mockRequest.body.nik = '123';
       mockRequest.body.password = 'abc';
 
-      (service.handleLogin as jest.Mock).mockReturnValue(null);
+      (service.handleLogin as jest.Mock).mockRejectedValue(error);
 
       await expect(
         controller.login(mockRequest.body as LoginReqBody),
-      ).rejects.toThrow(new UnauthorizedException('nik atau password salah!'));
+      ).rejects.toThrow(error);
       expect(service.handleLogin).toHaveBeenCalledWith(
         mockRequest.body.nik,
         mockRequest.body.password,
@@ -93,13 +96,14 @@ describe('auth controller test', () => {
     });
 
     it('should throw UnauthorizedException when token is not valid', async () => {
+      const error = new UnauthorizedException('token tidak valid!');
       mockRequest.body.token = 'abc';
 
-      (service.handleValidateToken as jest.Mock).mockReturnValue(null);
+      (service.handleValidateToken as jest.Mock).mockRejectedValue(error);
 
       await expect(
         controller.validateToken(mockRequest.body as ValidateTokenReqBody),
-      ).rejects.toThrow(new UnauthorizedException('token tidak valid!'));
+      ).rejects.toThrow(error);
       expect(service.handleValidateToken).toHaveBeenCalledWith(
         mockRequest.body.token,
       );
@@ -108,15 +112,13 @@ describe('auth controller test', () => {
     it('should success to validate token', async () => {
       mockRequest.body.token = 'abc';
 
-      const employee = new EmployeeModel();
-      employee.nik = '123';
-      employee.profilePhoto = 'coba.png';
-      employee.position = 'OnSite';
+      const employee: ValidateTokenResBody = {
+        nik: '123456789',
+        user_role: 'OnSite',
+        profile_photo: 'http://localhost:3000/files/default.png',
+      };
 
       (service.handleValidateToken as jest.Mock).mockReturnValue(employee);
-      (employee.getProfilePhoto as jest.Mock).mockReturnValue(
-        `http://localhost:3000/${employee.profilePhoto}`,
-      );
 
       const result = await controller.validateToken(
         mockRequest.body as ValidateTokenReqBody,
@@ -124,12 +126,7 @@ describe('auth controller test', () => {
       expect(service.handleValidateToken).toHaveBeenCalledWith(
         mockRequest.body.token,
       );
-      expect(employee.getProfilePhoto).toHaveBeenCalled();
-      expect(result).toEqual({
-        nik: employee.nik,
-        profile_photo: employee.getProfilePhoto(),
-        user_role: 'OnSite',
-      });
+      expect(result).toEqual(employee);
     });
   });
 });

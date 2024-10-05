@@ -1,6 +1,6 @@
 import { zeroPadding } from './common.utils';
 
-export const getDateString = (date: Date) => {
+const getDateString = (date: Date) => {
   const year: string = zeroPadding(date.getFullYear(), 4);
   const month: string = zeroPadding(date.getMonth() + 1, 2);
   const day: string = zeroPadding(date.getDate(), 2);
@@ -8,7 +8,7 @@ export const getDateString = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export const getTimeString = (date: Date) => {
+const getTimeString = (date: Date) => {
   const hours: string = zeroPadding(date.getHours());
   const minutes: string = zeroPadding(date.getMinutes());
   const seconds: string = zeroPadding(date.getSeconds());

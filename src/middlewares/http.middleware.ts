@@ -10,10 +10,14 @@ export class HttpMiddleware implements NestMiddleware {
     const start: number = Date.now();
     this.logger.http(`${req.method} ${req.originalUrl}`);
 
-    // Override res.json method for
-    const send: Send = res.send;
-    res.send = (body: any) => {
+    const logResponse = (body: any) => {
       this.logger.debug(`response body: `, body);
+    };
+
+    // Override res.json method
+    const send: Send = res.send;
+    res.send = function (body: any) {
+      logResponse(body);
       return send.call(this, body);
     };
 

@@ -1,14 +1,14 @@
+export const logger = {
+  debug: jest.fn(),
+  http: jest.fn(),
+  info: jest.fn(),
+  error: jest.fn(),
+};
+
 // Mock the winston logger
 jest.mock('winston', () => {
-  const mockLogger = {
-    debug: jest.fn(),
-    http: jest.fn(),
-    info: jest.fn(),
-    error: jest.fn(),
-  };
-
   return {
-    createLogger: jest.fn(() => mockLogger),
+    createLogger: jest.fn(() => logger),
     format: {
       printf: jest.fn(),
     },

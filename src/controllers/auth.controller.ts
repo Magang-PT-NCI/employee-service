@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import {
@@ -16,7 +15,6 @@ import {
 } from '../dto/auth.dto';
 import { ApiLogin, ApiValidateToken } from '../decorators/api-auth.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { EmployeeModel } from '../models/employee.model';
 import { LoggerUtil } from '../utils/logger.utils';
 
 @Controller()
@@ -42,13 +40,7 @@ export class AuthController {
       throw new BadRequestException('password harus diisi!');
     }
 
-    const result: LoginResBody = await this.service.handleLogin(nik, password);
-
-    if (!result) {
-      throw new UnauthorizedException('nik atau password salah!');
-    }
-
-    return result;
+    return await this.service.handleLogin(nik, password);
   }
 
   @Post('validate_token')
@@ -65,17 +57,6 @@ export class AuthController {
       throw new BadRequestException('token harus diisi!');
     }
 
-    const employee: EmployeeModel =
-      await this.service.handleValidateToken(token);
-
-    if (!employee) {
-      throw new UnauthorizedException('token tidak valid!');
-    }
-
-    return {
-      nik: employee.nik,
-      profile_photo: employee.getProfilePhoto(),
-      user_role: employee.position,
-    } as ValidateTokenResBody;
+    return await this.service.handleValidateToken(token);
   }
 }

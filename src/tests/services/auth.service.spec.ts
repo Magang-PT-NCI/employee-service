@@ -1,108 +1,154 @@
-import { EmployeeModel } from '../../models/employee.model';
+import { logger } from '../mocks/logger.mock';
+import { getEmployee } from '../mocks/prisma.mock';
+
 import { AuthService } from '../../services/auth.service';
 import { compareSync } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
-import { logger } from '../../utils/logger.utils';
 import { SECRET_KEY } from '../../config/app.config';
+import { PrismaService } from '../../services/prisma.service';
+import {
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { LoginResBody, ValidateTokenResBody } from '../../dto/auth.dto';
 
-jest.mock('../../models/employee.model');
-jest.mock('../../utils/logger.utils');
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
 
 describe('auth service test', () => {
+  const employeeSelect = {
+    nik: true,
+    password: true,
+    position: true,
+    profile_photo: true,
+  };
+
   let service: AuthService;
+  let prisma: PrismaService;
+
   beforeEach(() => {
-    service = new AuthService();
+    prisma = new PrismaService();
+    service = new AuthService(prisma);
   });
 
   describe('handle login test', () => {
-    it('should return null with invalid nik', async () => {
+    it('should throw Unauthorized with invalid nik', async () => {
       const nik = '123';
       const password = 'abc';
-      const employeeMock = { nik: '456', password };
+      const error = new UnauthorizedException('nik atau password salah!');
 
-      (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
-
-      expect(await service.handleLogin(nik, password)).toBeNull();
-      expect(EmployeeModel.get).toHaveBeenCalledWith(nik);
+      await expect(service.handleLogin(nik, password)).rejects.toThrow(error);
+      expect(getEmployee).toHaveBeenCalledWith(nik, employeeSelect);
     });
 
-    it('should return null with invalid password', async () => {
+    it('should throw Unauthorized with invalid password', async () => {
       const nik = '123';
       const password = 'abc';
-      const employeeMock = { nik, password: 'def' };
+      const error = new UnauthorizedException('nik atau password salah!');
 
-      (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
+      getEmployee.mockReturnValue({ nik, password });
       (compareSync as jest.Mock).mockReturnValue(false);
 
-      expect(await service.handleLogin(nik, password)).toBeNull();
-      expect(EmployeeModel.get).toHaveBeenCalledWith(nik);
-      expect(compareSync).toHaveBeenCalledWith(password, employeeMock.password);
+      await expect(service.handleLogin(nik, password)).rejects.toThrow(error);
+
+      expect(getEmployee).toHaveBeenCalledWith(nik, employeeSelect);
+      expect(compareSync).toHaveBeenCalledWith(password, password);
     });
 
-    it('should return token for valid request', async () => {
+    it('should return LoginResBody for valid request', async () => {
       const nik = '123';
       const password = 'abc';
       const employeeMock = {
         nik,
         password,
         position: 'Onsite',
-        getProfilePhoto: jest.fn().mockReturnValue('default.png'),
+        profile_photo: 'default.png',
       };
 
-      (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
+      getEmployee.mockReturnValue(employeeMock);
       (compareSync as jest.Mock).mockReturnValue(true);
       (sign as jest.Mock).mockReturnValue('rahasia');
 
       const result = await service.handleLogin(nik, password);
-      expect(result).not.toBeNull();
-      expect(result.user_role).toBe(employeeMock.position);
-      expect(result.token).toBe('rahasia');
-      expect(EmployeeModel.get).toHaveBeenCalledWith(nik);
+      expect(result).toEqual(new LoginResBody(employeeMock, 'rahasia'));
+      expect(getEmployee).toHaveBeenCalledWith(nik, employeeSelect);
       expect(compareSync).toHaveBeenCalledWith(password, employeeMock.password);
+    });
+
+    it('should throw InternalServerError when prisma is error', async () => {
+      const nik = '123';
+      const password = 'abc';
+
+      getEmployee.mockRejectedValue(new InternalServerErrorException());
+      await expect(service.handleLogin(nik, password)).rejects.toThrow(
+        new InternalServerErrorException(),
+      );
+
+      expect(getEmployee).toHaveBeenCalledWith(nik, employeeSelect);
     });
   });
 
   describe('handle validate token test', () => {
-    it('should return null for invalid token', async () => {
+    it('should throw Unauthorized for invalid token', async () => {
       const token = 'rahasia';
 
       (verify as jest.Mock).mockImplementation(() => {
         throw new Error();
       });
 
-      const result = await service.handleValidateToken(token);
+      await expect(service.handleValidateToken(token)).rejects.toThrow(
+        new UnauthorizedException('token tidak valid!'),
+      );
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
       expect(logger.error).toHaveBeenCalled();
-      expect(result).toBeNull();
     });
 
-    it('should return null for not exists employee', async () => {
+    it('should throw Unauthorized for not exists employee', async () => {
       const token = 'rahasia';
       const tokenData = { nik: '123' };
 
       (verify as jest.Mock).mockReturnValue(tokenData);
-      (EmployeeModel.get as jest.Mock).mockReturnValue(null);
+      getEmployee.mockReturnValue(null);
 
-      const result = await service.handleValidateToken(token);
+      await expect(service.handleValidateToken(token)).rejects.toThrow(
+        new UnauthorizedException('token tidak valid!'),
+      );
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
-      expect(EmployeeModel.get).toHaveBeenCalledWith(tokenData.nik);
-      expect(result).toBeNull();
+      expect(getEmployee).toHaveBeenCalledWith(tokenData.nik, employeeSelect);
     });
 
     it('should return employee data for valid token', async () => {
       const token = 'rahasia';
       const tokenData = { nik: '123' };
-      const employeeMock = { nik: '123', name: 'abc' };
+      const employeeMock = {
+        nik: '123',
+        password: 'ucup',
+        position: 'Onsite',
+        profile_photo: 'default.png',
+      };
 
       (verify as jest.Mock).mockReturnValue(tokenData);
-      (EmployeeModel.get as jest.Mock).mockReturnValue(employeeMock);
+      getEmployee.mockReturnValue(employeeMock);
 
       const result = await service.handleValidateToken(token);
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
-      expect(EmployeeModel.get).toHaveBeenCalledWith(tokenData.nik);
-      expect(result).toEqual(employeeMock);
+      expect(getEmployee).toHaveBeenCalledWith(tokenData.nik, employeeSelect);
+      expect(result).toEqual(new ValidateTokenResBody(employeeMock));
     });
+  });
+
+  it('should throw InternalServerError when prisma is error', async () => {
+    const token = 'rahasia';
+    const tokenData = { nik: '123' };
+
+    (verify as jest.Mock).mockReturnValue(tokenData);
+    getEmployee.mockRejectedValue(new InternalServerErrorException());
+
+    await expect(service.handleValidateToken(token)).rejects.toThrow(
+      new InternalServerErrorException(),
+    );
+
+    expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
+    expect(getEmployee).toHaveBeenCalledWith(tokenData.nik, employeeSelect);
   });
 });

@@ -1,15 +1,12 @@
-import '../mocks/logger.mock';
+import { logger } from '../mocks/logger.mock';
 
 import { LoggerUtil } from '../../utils/logger.utils';
-import { createLogger, Logger } from 'winston';
 
 describe('logger utility test', () => {
   let loggerService: LoggerUtil;
-  let logger: Logger;
 
   beforeEach(() => {
     loggerService = new LoggerUtil('TestClass');
-    logger = createLogger();
   });
 
   afterEach(() => {

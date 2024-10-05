@@ -1,18 +1,26 @@
+import { getApiKey } from '../mocks/prisma.mock';
 import { NextFunction, Request, Response } from 'express';
 import { ServiceAuthMiddleware } from '../../middlewares/service-auth.middleware';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { ServiceAuthUtils } from '../../utils/service-auth.utils';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { PrismaService } from '../../services/prisma.service';
+import { validateToken } from '../../utils/common.utils';
 
-jest.mock('../../utils/service-auth.utils');
+jest.mock('../../utils/common.utils');
 
 describe('api key middleware test', () => {
   let middleware: ServiceAuthMiddleware;
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockNext: NextFunction;
+  let prisma: PrismaService;
 
   beforeEach(() => {
-    middleware = new ServiceAuthMiddleware();
+    prisma = new PrismaService();
+    middleware = new ServiceAuthMiddleware(prisma);
 
     mockRequest = { get: jest.fn() };
     mockNext = jest.fn();
@@ -46,7 +54,7 @@ describe('api key middleware test', () => {
     };
 
     (mockRequest.get as jest.Mock).mockImplementation(mockHeaderGet);
-    (ServiceAuthUtils.validateApiKey as jest.Mock).mockReturnValue(false);
+    getApiKey.mockReturnValue(null);
 
     expect(
       middleware.use(
@@ -91,7 +99,7 @@ describe('api key middleware test', () => {
     };
 
     (mockRequest.get as jest.Mock).mockImplementation(mockHeaderGet);
-    (ServiceAuthUtils.validateToken as jest.Mock).mockReturnValue(null);
+    (validateToken as jest.Mock).mockReturnValue(null);
 
     expect(
       middleware.use(
@@ -113,7 +121,7 @@ describe('api key middleware test', () => {
     };
 
     (mockRequest.get as jest.Mock).mockImplementation(mockHeaderGet);
-    (ServiceAuthUtils.validateApiKey as jest.Mock).mockReturnValue(true);
+    getApiKey.mockReturnValue({ id: 1, key: 'abc' });
 
     await middleware.use(
       mockRequest as Request,
@@ -134,7 +142,7 @@ describe('api key middleware test', () => {
     };
 
     (mockRequest.get as jest.Mock).mockImplementation(mockHeaderGet);
-    (ServiceAuthUtils.validateToken as jest.Mock).mockReturnValue({
+    (validateToken as jest.Mock).mockReturnValue({
       nik: '001230045600701',
     });
 
@@ -146,5 +154,27 @@ describe('api key middleware test', () => {
     expect(mockRequest.get).toHaveBeenCalledWith('X-API-KEY');
     expect(mockRequest.get).toHaveBeenCalledWith('Authorization');
     expect(mockNext).toHaveBeenCalled();
+  });
+
+  it('should throw InternalServerError when prisma is error', async () => {
+    const mockHeaderGet = (header: string) => {
+      if (header.toLowerCase() === 'x-api-key') {
+        return 'abc';
+      }
+      return undefined;
+    };
+
+    (mockRequest.get as jest.Mock).mockImplementation(mockHeaderGet);
+    getApiKey.mockRejectedValue(new InternalServerErrorException());
+
+    await expect(
+      middleware.use(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      ),
+    ).rejects.toThrow(InternalServerErrorException);
+    expect(mockRequest.get).toHaveBeenCalledWith('X-API-KEY');
+    expect(mockRequest.get).toHaveBeenCalledWith('Authorization');
   });
 });
