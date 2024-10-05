@@ -45,7 +45,7 @@ export class AuthService {
 
   public async handleValidateToken(
     token: string,
-  ): Promise<ValidateTokenResBody | null> {
+  ): Promise<ValidateTokenResBody> {
     const tokenData: TokenPayload = validateToken(token, this.logger);
 
     if (!tokenData) {
