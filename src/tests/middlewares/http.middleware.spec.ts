@@ -1,8 +1,7 @@
+import { logger } from '../mocks/logger.mock';
+
 import { HttpMiddleware } from '../../middlewares/http.middleware';
 import { Request, Response, NextFunction } from 'express';
-import { logFormat, logger } from '../../utils/logger.utils';
-
-jest.mock('../../utils/logger.utils');
 
 describe('http middleware test', () => {
   let middleware: HttpMiddleware;
@@ -28,9 +27,15 @@ describe('http middleware test', () => {
     mockNext = jest.fn();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should log request and pass to next middleware', () => {
     middleware.use(mockRequest as Request, mockResponse as Response, mockNext);
-    expect(logger.http).toHaveBeenCalledWith('GET /test-url');
+    expect(logger.http).toHaveBeenCalledWith('GET /test-url', {
+      classname: 'HttpMiddleware',
+    });
     expect(mockNext).toHaveBeenCalled();
   });
 
@@ -39,11 +44,11 @@ describe('http middleware test', () => {
 
     middleware.use(mockRequest as Request, mockResponse as Response, mockNext);
 
-    (logFormat as jest.Mock).mockReturnValue(JSON.stringify(body));
     mockResponse.send(body); // Call the overridden send method
 
     expect(logger.debug).toHaveBeenCalledWith(
-      'response body: ' + JSON.stringify(body),
+      'response body: ' + JSON.stringify(body, null, 2),
+      { classname: 'HttpMiddleware' },
     );
     expect(sendMock).toHaveBeenCalledWith(body); // Ensure original send is still called
   });
@@ -61,6 +66,7 @@ describe('http middleware test', () => {
 
     expect(logger.http).toHaveBeenCalledWith(
       expect.stringContaining('GET /test-url - 200 OK -'),
+      { classname: 'HttpMiddleware' },
     );
   });
 
