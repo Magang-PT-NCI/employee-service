@@ -1,15 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PORT } from './config/app.config';
-import { logger } from './utils/logger.utils';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
+import { LoggerUtil } from './utils/logger.utils';
 
 async function bootstrap(): Promise<void> {
+  const logger = new LoggerUtil('Main');
+
   const app: INestApplication = await NestFactory.create(AppModule);
   app.enableCors();
-
-  logger.info(`Application started on port ${PORT}`);
+  logger.info('Loaded app modules');
 
   const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
     .setTitle('Employee Service API')
@@ -30,7 +31,9 @@ async function bootstrap(): Promise<void> {
     .build();
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  logger.info('Generated Swagger API Documentation');
 
   await app.listen(PORT);
+  logger.info(`Application started on port ${PORT}`);
 }
 bootstrap();

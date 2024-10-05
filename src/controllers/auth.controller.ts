@@ -8,7 +8,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { logFormat, logger } from '../utils/logger.utils';
 import {
   LoginReqBody,
   LoginResBody,
@@ -18,17 +17,20 @@ import {
 import { ApiLogin, ApiValidateToken } from '../decorators/api-auth.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { EmployeeModel } from '../models/employee.model';
+import { LoggerUtil } from '../utils/logger.utils';
 
 @Controller()
 @ApiTags('Auth')
 export class AuthController {
+  private readonly logger = new LoggerUtil('AuthController');
+
   public constructor(private readonly service: AuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiLogin()
   public async login(@Body() reqBody: LoginReqBody): Promise<LoginResBody> {
-    logger.debug(`request body: ${logFormat(reqBody)}`);
+    this.logger.debug(`request body: `, reqBody);
 
     const { nik, password } = reqBody;
 
@@ -55,7 +57,7 @@ export class AuthController {
   public async validateToken(
     @Body() reqBody: ValidateTokenReqBody,
   ): Promise<ValidateTokenResBody> {
-    logger.debug(`request body: ${logFormat(reqBody)}`);
+    this.logger.debug(`request body: `, reqBody);
 
     const { token } = reqBody;
 
