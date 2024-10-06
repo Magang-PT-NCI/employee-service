@@ -7,10 +7,11 @@ import { EmployeeAuth, TokenPayload } from '../interfaces/auth.interfaces';
 import { validateToken } from '../utils/common.utils';
 import { LoggerUtil } from '../utils/logger.utils';
 import { PrismaService } from './prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  private static readonly EMPLOYEE_SELECT = {
+  private static readonly EMPLOYEE_SELECT: Prisma.EmployeeSelect = {
     nik: true,
     password: true,
     position: true,
