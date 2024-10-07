@@ -3,7 +3,6 @@ import {
   validateToken,
   zeroPadding,
 } from '../../utils/common.utils';
-import { LoggerUtil } from '../../utils/logger.utils';
 import { TokenPayload } from '../../interfaces/auth.interfaces';
 import { verify } from 'jsonwebtoken';
 
@@ -22,16 +21,15 @@ describe('common utility test', () => {
   });
 
   it('should return correct value for validateToken', () => {
-    const logger = new LoggerUtil('TestClass');
     const mockPayload: TokenPayload = { nik: '123' };
 
     (verify as jest.Mock).mockReturnValue(mockPayload);
-    expect(validateToken('abc', logger)).toEqual(mockPayload);
+    expect(validateToken('abc')).toEqual(mockPayload);
 
     (verify as jest.Mock).mockImplementation(() => {
       throw new Error();
     });
-    expect(validateToken('abc', logger)).toBeNull();
+    expect(validateToken('abc')).toBeNull();
   });
 
   it('should return correct value for getPhotoUrl', () => {

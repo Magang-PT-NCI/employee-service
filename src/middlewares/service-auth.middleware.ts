@@ -33,7 +33,7 @@ export class ServiceAuthMiddleware implements NestMiddleware {
       }
 
       const token = headerToken.split(' ')[1];
-      const verifiedToken: TokenPayload = validateToken(token, this.logger);
+      const verifiedToken: TokenPayload = validateToken(token);
 
       if (!verifiedToken) {
         throw new UnauthorizedException('token tidak valid!');

@@ -47,7 +47,7 @@ export class AuthService {
   public async handleValidateToken(
     token: string,
   ): Promise<ValidateTokenResBody> {
-    const tokenData: TokenPayload = validateToken(token, this.logger);
+    const tokenData: TokenPayload = validateToken(token);
 
     if (!tokenData) {
       throw new UnauthorizedException('token tidak valid!');
