@@ -27,10 +27,10 @@ async function bootstrap(): Promise<void> {
     )
     .addTag('Employee')
     .addTag('Auth')
-
     .build();
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
   logger.info('Generated Swagger API Documentation');
   logger.info('Access /api to see the API documentation');
   logger.info('Access /api-json to see the Open API json file');
@@ -39,4 +39,5 @@ async function bootstrap(): Promise<void> {
   await app.listen(PORT);
   logger.info(`Application started on port ${PORT}`);
 }
+
 bootstrap();
