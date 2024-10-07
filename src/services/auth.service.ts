@@ -36,9 +36,7 @@ export class AuthService {
       throw new UnauthorizedException('nik atau password salah!');
     }
 
-    const token = sign({ nik: employee.nik }, SECRET_KEY, { expiresIn: '1w' });
-
-    return new LoginResBody(employee, token);
+    return new LoginResBody(employee);
   }
 
   public async handleValidateToken(
