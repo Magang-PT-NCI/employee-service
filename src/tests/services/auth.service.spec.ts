@@ -70,7 +70,7 @@ describe('auth service test', () => {
       (sign as jest.Mock).mockReturnValue('rahasia');
 
       const result = await service.handleLogin(nik, password);
-      expect(result).toEqual(new LoginResBody(employeeMock, 'rahasia'));
+      expect(result).toEqual(new LoginResBody(employeeMock));
       expect(getEmployee).toHaveBeenCalledWith(nik, employeeSelect);
       expect(compareSync).toHaveBeenCalledWith(password, employeeMock.password);
     });

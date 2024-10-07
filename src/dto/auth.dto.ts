@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EmployeeAuth } from '../interfaces/auth.interfaces';
 import { getPhotoUrl } from '../utils/common.utils';
+import { SECRET_KEY } from '../config/app.config';
+import { sign } from 'jsonwebtoken';
 
 export class ValidateTokenReqBody {
   @ApiProperty({
@@ -45,8 +47,8 @@ export class LoginResBody extends ValidateTokenResBody {
   })
   public readonly token: string;
 
-  public constructor(employee: EmployeeAuth, token: string) {
+  public constructor(employee: EmployeeAuth) {
     super(employee);
-    this.token = token;
+    this.token = sign({ nik: employee.nik }, SECRET_KEY, { expiresIn: '1w' });
   }
 }
