@@ -16,8 +16,9 @@ import { getDateFormat } from './date.utils';
 
 export class LoggerUtil {
   private static logger: Logger;
+  private static instance: LoggerUtil;
 
-  public constructor(private readonly classname: string) {}
+  public constructor(private classname: string) {}
 
   static {
     const fileOptions: FileTransportOptions = {
@@ -44,6 +45,13 @@ export class LoggerUtil {
         return `${time} - ${level.toUpperCase()} [${classname}] ${message}`;
       }),
     });
+
+    LoggerUtil.instance = new LoggerUtil('GlobalLogger');
+  }
+
+  public static getInstance(classname: string): LoggerUtil {
+    LoggerUtil.instance.classname = classname;
+    return LoggerUtil.instance;
   }
 
   public debug(message: string, dataObject?: object | string) {

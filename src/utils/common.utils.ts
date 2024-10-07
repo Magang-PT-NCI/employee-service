@@ -7,14 +7,11 @@ export const zeroPadding = (numText: string | number, length: number = 2) => {
   return `${numText}`.padStart(length, '0');
 };
 
-export const validateToken = (
-  token: string,
-  logger: LoggerUtil,
-): TokenPayload => {
+export const validateToken = (token: string): TokenPayload => {
   try {
     return verify(token, SECRET_KEY) as TokenPayload;
   } catch (err) {
-    logger.error(err);
+    LoggerUtil.getInstance('ValidateToken').error(err);
     return null;
   }
 };
