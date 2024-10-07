@@ -9,7 +9,6 @@ import {
 import {
   DESTINATION,
   FILE_FLAG,
-  IS_SHOW_DATE,
   LEVEL,
   TRANSPORT,
 } from '../config/logger.config';
@@ -40,7 +39,7 @@ export class LoggerUtil {
       transports,
       format: format.printf(({ message, level, classname }) => {
         const date: Date = new Date();
-        const time = getDateFormat(date, IS_SHOW_DATE);
+        const time = getDateFormat(date);
 
         return `${time} - ${level.toUpperCase()} [${classname}] ${message}`;
       }),

@@ -1,4 +1,5 @@
 import { zeroPadding } from './common.utils';
+import { IS_SHOW_DATE } from '../config/logger.config';
 
 const getDateString = (date: Date) => {
   const year: string = zeroPadding(date.getFullYear(), 4);
@@ -17,8 +18,8 @@ const getTimeString = (date: Date) => {
   return `${hours}:${minutes}:${seconds}.${miliseconds}`;
 };
 
-export const getDateFormat = (date: Date, isShowDate: boolean = false) => {
-  return isShowDate
+export const getDateFormat = (date: Date) => {
+  return IS_SHOW_DATE
     ? `${getDateString(date)} ${getTimeString(date)}`
     : getTimeString(date);
 };
