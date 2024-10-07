@@ -12,4 +12,4 @@ export const FILE_FLAG: 'a' | 'w' = flags === 'append' ? 'a' : 'w';
 export const DESTINATION: string =
   process.env.LOGGER_DESTINATION || 'employee-service.log';
 export const IS_SHOW_DATE: boolean =
-  (process.env.LOGGER_SHOW_DATE.toLowerCase() || 'false') === 'true';
+  (process.env.LOGGER_SHOW_DATE?.toLowerCase() || 'false') === 'true';
