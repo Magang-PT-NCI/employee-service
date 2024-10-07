@@ -5,7 +5,6 @@ import { SECRET_KEY } from '../config/app.config';
 import { LoginResBody, ValidateTokenResBody } from '../dto/auth.dto';
 import { EmployeeAuth, TokenPayload } from '../interfaces/auth.interfaces';
 import { validateToken } from '../utils/common.utils';
-import { LoggerUtil } from '../utils/logger.utils';
 import { PrismaService } from './prisma.service';
 import { Prisma } from '@prisma/client';
 
@@ -17,8 +16,6 @@ export class AuthService {
     position: true,
     profile_photo: true,
   };
-
-  private readonly logger = new LoggerUtil('AuthService');
 
   public constructor(private readonly prisma: PrismaService) {}
 
