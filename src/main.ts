@@ -1,14 +1,29 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PORT } from './config/app.config';
+import { CERTIFICATE_FILE, KEY_FILE, PORT, SECURED } from './config/app.config';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { LoggerUtil } from './utils/logger.utils';
+import { readFileSync } from 'fs';
 
 async function bootstrap(): Promise<void> {
   const logger = new LoggerUtil('Main');
 
-  const app: INestApplication = await NestFactory.create(AppModule);
+  // Opsi HTTPS jika SECURED=true
+  let httpsOptions = null;
+  if (SECURED) {
+    httpsOptions = {
+      key: readFileSync(KEY_FILE),
+      cert: readFileSync(CERTIFICATE_FILE),
+    };
+    logger.info('Server berjalan pada mode secured (HTTPS)');
+  } else {
+    logger.info('Server berjalan pada mode unsecured (HTTP)');
+  }
+
+  const app: INestApplication = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
   app.enableCors();
   logger.info('Loaded app modules');
 

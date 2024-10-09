@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ApiBadRequest, ApiUnauthorized } from './api-response.decorator';
 import { LoginResBody, ValidateTokenResBody } from '../dto/auth.dto';
+import { ServerErrorResBody } from '../dto/api-error.dto';
 
 export const ApiLogin = (): MethodDecorator => {
   return applyDecorators(
@@ -16,6 +17,11 @@ export const ApiLogin = (): MethodDecorator => {
     }),
     ApiBadRequest('nik harus diisi!', 'unfilled nik or password'),
     ApiUnauthorized('nik atau password salah!', 'invalid nik or password'),
+    ApiResponse({
+      status: 500,
+      description: 'an unexpected error occurred',
+      type: ServerErrorResBody,
+    }),
   );
 };
 
@@ -32,5 +38,10 @@ export const ApiValidateToken = (): MethodDecorator => {
     }),
     ApiBadRequest('token harus diisi!', 'unfilled token'),
     ApiUnauthorized('token tidak valid!', 'invalid token'),
+    ApiResponse({
+      status: 500,
+      description: 'an unexpected error occurred',
+      type: ServerErrorResBody,
+    }),
   );
 };

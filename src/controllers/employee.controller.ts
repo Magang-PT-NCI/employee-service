@@ -3,6 +3,7 @@ import { EmployeeService } from '../services/employee.service';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiEmployee } from '../decorators/api-employee.decorator';
 import { EmployeeParams, EmployeeResBody } from '../dto/employee.dto';
+import { ApiAllEmployee } from '../decorators/api-all-employee.decorator';
 
 @Controller('employee')
 @ApiTags('Employee')
@@ -11,11 +12,17 @@ import { EmployeeParams, EmployeeResBody } from '../dto/employee.dto';
 export class EmployeeController {
   public constructor(private readonly service: EmployeeService) {}
 
+  @Get('')
+  @ApiAllEmployee()
+  public getAllEmployee(): Promise<EmployeeResBody[]> {
+    return this.service.handleGetAllEmployee();
+  }
+
   @Get(':nik')
   @ApiEmployee()
-  public async getEmployee(
+  public getEmployee(
     @Param() params: EmployeeParams,
   ): Promise<EmployeeResBody> {
-    return await this.service.handleGetEmployee(params.nik);
+    return this.service.handleGetEmployee(params.nik);
   }
 }
