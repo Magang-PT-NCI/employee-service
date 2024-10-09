@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { ApiKey, Employee, Prisma, PrismaClient } from '@prisma/client';
 import { LoggerUtil } from '../utils/logger.utils';
+import { EmployeeService } from './employee.service';
+import { EmployeeResBody } from '../dto/employee.dto';
 
 @Injectable()
 export class PrismaService
@@ -32,6 +34,17 @@ export class PrismaService
       return await this.employee.findUnique({
         where: { nik },
         select,
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  public async getAllEmployee(): Promise<EmployeeResBody[]> {
+    try {
+      return await this.employee.findMany({
+        select: EmployeeService.EMPLOYEE_SELECT,
       });
     } catch (error) {
       this.logger.error(error);

@@ -1,7 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compareSync } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
-import { SECRET_KEY } from '../config/app.config';
 import { LoginResBody, ValidateTokenResBody } from '../dto/auth.dto';
 import { EmployeeAuth, TokenPayload } from '../interfaces/auth.interfaces';
 import { validateToken } from '../utils/common.utils';
@@ -10,7 +8,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  private static readonly EMPLOYEE_SELECT: Prisma.EmployeeSelect = {
+  private static readonly AUTH_EMPLOYEE_SELECT: Prisma.EmployeeSelect = {
     nik: true,
     password: true,
     position: true,
@@ -25,7 +23,7 @@ export class AuthService {
   ): Promise<LoginResBody> {
     const employee: EmployeeAuth = await this.prisma.getEmployee(
       nik,
-      AuthService.EMPLOYEE_SELECT,
+      AuthService.AUTH_EMPLOYEE_SELECT,
     );
 
     const isPasswordValid: boolean = employee
@@ -50,7 +48,7 @@ export class AuthService {
 
     const employee: EmployeeAuth = await this.prisma.getEmployee(
       tokenData.nik,
-      AuthService.EMPLOYEE_SELECT,
+      AuthService.AUTH_EMPLOYEE_SELECT,
     );
 
     if (!employee) {
