@@ -9,7 +9,6 @@ import { readFileSync } from 'fs';
 async function bootstrap(): Promise<void> {
   const logger = new LoggerUtil('Main');
 
-  // Opsi HTTPS jika SECURED=true
   let httpsOptions = null;
   if (SECURED) {
     httpsOptions = {
