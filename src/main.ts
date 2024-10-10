@@ -15,9 +15,9 @@ async function bootstrap(): Promise<void> {
       key: readFileSync(KEY_FILE),
       cert: readFileSync(CERTIFICATE_FILE),
     };
-    logger.info('Server berjalan pada mode secured (HTTPS)');
+    logger.info('Server is running in secured mode (HTTPS)');
   } else {
-    logger.info('Server berjalan pada mode unsecured (HTTP)');
+    logger.info('Server is running in unsecured mode (HTTP)');
   }
 
   const app: INestApplication = await NestFactory.create(AppModule, {
