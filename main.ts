@@ -1,9 +1,14 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { CERTIFICATE_FILE, KEY_FILE, PORT, SECURED } from './config/app.config';
+import { AppModule } from 'src/app.module';
+import {
+  CERTIFICATE_FILE,
+  KEY_FILE,
+  PORT,
+  SECURED,
+} from 'src/config/app.config';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
-import { LoggerUtil } from './utils/logger.utils';
+import { LoggerUtil } from 'src/utils/logger.utils';
 import { readFileSync } from 'fs';
 
 async function bootstrap(): Promise<void> {
