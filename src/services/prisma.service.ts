@@ -1,13 +1,9 @@
-import {
-  Injectable,
-  OnModuleInit,
-  OnModuleDestroy,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ApiKey, Employee, Prisma, PrismaClient } from '@prisma/client';
 import { LoggerUtil } from '../utils/logger.utils';
 import { EmployeeService } from './employee.service';
 import { EmployeeResBody } from '../dto/employee.dto';
+import { handleError } from '../utils/common.utils';
 
 @Injectable()
 export class PrismaService
@@ -36,8 +32,7 @@ export class PrismaService
         select,
       });
     } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException();
+      handleError(error, this.logger);
     }
   }
 
@@ -47,8 +42,7 @@ export class PrismaService
         select: EmployeeService.EMPLOYEE_SELECT,
       });
     } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException();
+      handleError(error, this.logger);
     }
   }
 
@@ -58,8 +52,7 @@ export class PrismaService
         where: { key },
       });
     } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException();
+      handleError(error, this.logger);
     }
   }
 }
