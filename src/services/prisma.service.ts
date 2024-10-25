@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  OnModuleInit,
-  OnModuleDestroy,
-} from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ApiKey, Employee, Prisma, PrismaClient } from '@prisma/client';
 import { LoggerUtil } from '../utils/logger.utils';
 import { EmployeeService } from './employee.service';
