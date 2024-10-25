@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Position } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const areas = ['Bandung', 'Cimahi', 'Jakarta'];
@@ -13,18 +13,24 @@ const roles = [
 
 let nikCounter = 1;
 
-const getRandomData = (source: string[]) => {
+const getRandomData = (source: string[]): string => {
   return source[Math.floor(Math.random() * source.length)];
 };
 
-const getPassword = (name: string) => {
+const getPassword = (name: string): string => {
   const splitName = name.split(' ');
   const firstName = splitName[0].toLowerCase();
   const secondName = splitName[1].toLowerCase();
   return bcrypt.hashSync(`${firstName}${secondName}123`, 10);
 };
 
-const createEmployee = async (user: any) => {
+interface Employee {
+  name: string;
+  position?: Position;
+  profile_photo?: string;
+}
+
+const createEmployee = async (user: Employee) => {
   const nik = '0012300456007' + `${nikCounter++}`.padStart(2, '0');
   const password = getPassword(user.name);
   const area = getRandomData(areas);
