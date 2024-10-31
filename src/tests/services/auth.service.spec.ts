@@ -1,9 +1,8 @@
-import { logger } from '../mocks/logger.mock';
 import { getEmployee } from '../mocks/prisma.mock';
 
 import { AuthService } from '../../services/auth.service';
 import { compareSync } from 'bcrypt';
-import { sign, verify } from 'jsonwebtoken';
+import { sign, TokenExpiredError, verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '../../config/app.config';
 import { PrismaService } from '../../services/prisma.service';
 import {
@@ -93,14 +92,13 @@ describe('auth service test', () => {
       const token = 'rahasia';
 
       (verify as jest.Mock).mockImplementation(() => {
-        throw new Error();
+        throw new TokenExpiredError('expired', new Date());
       });
 
       await expect(service.handleValidateToken(token)).rejects.toThrow(
         new UnauthorizedException('token tidak valid!'),
       );
       expect(verify).toHaveBeenCalledWith(token, SECRET_KEY);
-      expect(logger.error).toHaveBeenCalled();
     });
 
     it('should throw Unauthorized for not exists employee', async () => {

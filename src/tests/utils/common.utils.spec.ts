@@ -4,7 +4,8 @@ import {
   zeroPadding,
 } from '../../utils/common.utils';
 import { TokenPayload } from '../../interfaces/auth.interfaces';
-import { verify } from 'jsonwebtoken';
+import { TokenExpiredError, verify } from 'jsonwebtoken';
+import { InternalServerErrorException } from '@nestjs/common';
 
 jest.mock('jsonwebtoken');
 
@@ -27,9 +28,16 @@ describe('common utility test', () => {
     expect(validateToken('abc')).toEqual(mockPayload);
 
     (verify as jest.Mock).mockImplementation(() => {
-      throw new Error();
+      throw new TokenExpiredError('expired', new Date());
     });
     expect(validateToken('abc')).toBeNull();
+
+    (verify as jest.Mock).mockImplementation(() => {
+      throw new Error();
+    });
+    expect(() => validateToken('abc')).toThrow(
+      new InternalServerErrorException(),
+    );
   });
 
   it('should return correct value for getPhotoUrl', () => {
