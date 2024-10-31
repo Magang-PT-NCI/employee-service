@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken';
+import { TokenExpiredError, verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/app.config';
 import { TokenPayload } from '../interfaces/auth.interfaces';
 import { LoggerUtil } from './logger.utils';
@@ -21,6 +21,10 @@ export const validateToken = (token: string): TokenPayload => {
   try {
     return verify(token, SECRET_KEY) as TokenPayload;
   } catch (err) {
+    if (err instanceof TokenExpiredError) {
+      return null;
+    }
+
     handleError(err, LoggerUtil.getInstance('ValidateToken'));
   }
 };
