@@ -14,6 +14,7 @@ describe('employee controller test', () => {
         {
           provide: EmployeeService,
           useValue: {
+            handleGetAllEmployee: jest.fn(),
             handleGetEmployee: jest.fn(),
           },
         },
@@ -22,6 +23,19 @@ describe('employee controller test', () => {
 
     controller = module.get<EmployeeController>(EmployeeController);
     service = module.get<EmployeeService>(EmployeeService);
+  });
+
+  it('should return all employee data', async () => {
+    const mockEmployeeData = [{ name: 'John Doe' }];
+
+    (service.handleGetAllEmployee as jest.Mock).mockResolvedValue(
+      mockEmployeeData,
+    );
+
+    const result = await controller.getAllEmployee();
+
+    expect(result).toEqual(mockEmployeeData);
+    expect(service.handleGetAllEmployee).toHaveBeenCalled();
   });
 
   it('should return employee data when found', async () => {
