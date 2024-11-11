@@ -1,4 +1,4 @@
-import { getEmployee } from '../mocks/prisma.mock';
+import { getAllEmployee, getEmployee } from '../mocks/prisma.mock';
 
 import {
   InternalServerErrorException,
@@ -22,6 +22,17 @@ describe('employee service test', () => {
   beforeEach(() => {
     prisma = new PrismaService();
     service = new EmployeeService(prisma);
+  });
+
+  it('should return all employee data', async () => {
+    const mockEmployee = [{ name: 'John Doe' }];
+
+    getAllEmployee.mockResolvedValue(mockEmployee);
+
+    const result = await service.handleGetAllEmployee();
+
+    expect(result).toEqual(mockEmployee);
+    expect(getAllEmployee).toHaveBeenCalled();
   });
 
   it('should return employee data when employee is found', async () => {
