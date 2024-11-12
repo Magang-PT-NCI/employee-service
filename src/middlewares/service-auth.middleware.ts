@@ -9,12 +9,9 @@ import { PrismaService } from '../services/prisma.service';
 import { ApiKey } from '@prisma/client';
 import { TokenPayload } from '../interfaces/auth.interfaces';
 import { validateToken } from '../utils/common.utils';
-import { LoggerUtil } from '../utils/logger.utils';
 
 @Injectable()
 export class ServiceAuthMiddleware implements NestMiddleware {
-  private readonly logger = new LoggerUtil('ServiceAuthMiddleware');
-
   public constructor(private readonly prisma: PrismaService) {}
 
   public async use(req: Request, res: Response, next: NextFunction) {
