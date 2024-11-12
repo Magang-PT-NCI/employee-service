@@ -1,11 +1,16 @@
 import {
   getPhotoUrl,
+  handleError,
   validateToken,
   zeroPadding,
 } from '../../utils/common.utils';
 import { TokenPayload } from '../../interfaces/auth.interfaces';
 import { TokenExpiredError, verify } from 'jsonwebtoken';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { LoggerUtil } from '../../utils/logger.utils';
 
 jest.mock('jsonwebtoken');
 
@@ -44,5 +49,15 @@ describe('common utility test', () => {
     expect(getPhotoUrl('abcd')).toBe(
       `https://lh3.googleusercontent.com/d/abcd=s220`,
     );
+  });
+
+  it('should handle error correctly', () => {
+    const logger = LoggerUtil.getInstance('Test');
+    expect(() => handleError(new Error(), logger)).toThrow(
+      InternalServerErrorException,
+    );
+
+    const notFound = new NotFoundException('Karyawan tidak ditemukan!');
+    expect(() => handleError(notFound, logger)).toThrow(notFound);
   });
 });
