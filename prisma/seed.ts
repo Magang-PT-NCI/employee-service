@@ -2,7 +2,6 @@ import * as bcrypt from 'bcrypt';
 import { PrismaClient, Position } from '@prisma/client';
 
 const prisma = new PrismaClient();
-const areas = ['Bandung', 'Cimahi', 'Jakarta'];
 const roles = [
   'Frontend Developer',
   'Backend Developer',
@@ -26,6 +25,7 @@ const getPassword = (name: string): string => {
 
 interface Employee {
   name: string;
+  area: string;
   position?: Position;
   profile_photo?: string;
 }
@@ -33,7 +33,7 @@ interface Employee {
 const createEmployee = async (user: Employee) => {
   const nik = '0012300456007' + `${nikCounter++}`.padStart(2, '0');
   const password = getPassword(user.name);
-  const area = getRandomData(areas);
+  const area = user.area;
   const profile_photo =
     user.profile_photo ?? '17ZxcvViTexCuS_j_Vve2CKTyHG7iu0aY';
   const position = user.position ?? 'OnSite';
@@ -54,21 +54,29 @@ const createEmployee = async (user: Employee) => {
 };
 
 const main = async () => {
-  await createEmployee({ name: 'Aditya Wijaya Putra' });
-  await createEmployee({ name: 'Rina Andriani' });
-  await createEmployee({ name: 'Budi Santoso' });
-  await createEmployee({ name: 'Maria Hadiyanti' });
-  await createEmployee({ name: 'Dewa Prasetyo' });
-  await createEmployee({ name: 'Dini Kusuma Wardani' });
-  await createEmployee({ name: 'Arif Rahman Hakim' });
-  await createEmployee({ name: 'Lestari Wulandari', position: 'Koordinator' });
-  await createEmployee({ name: 'Indra Gunawan' });
-  await createEmployee({ name: 'Siti Fatimah' });
-  await createEmployee({ name: 'Agus Supriadi' });
-  await createEmployee({ name: 'Retno Maharani' });
-  await createEmployee({ name: 'Eko Saputro' });
-  await createEmployee({ name: 'Yuli Kartika Sari' });
-  await createEmployee({ name: 'Joko Susanto', position: 'Koordinator' });
+  await createEmployee({ name: 'Aditya Wijaya Putra', area: 'Surabaya' });
+  await createEmployee({ name: 'Rina Andriani', area: 'Surabaya' });
+  await createEmployee({ name: 'Budi Santoso', area: 'Surabaya' });
+  await createEmployee({ name: 'Maria Hadiyanti', area: 'Surabaya' });
+  await createEmployee({ name: 'Dewa Prasetyo', area: 'Surabaya' });
+  await createEmployee({ name: 'Dini Kusuma Wardani', area: 'Surabaya' });
+  await createEmployee({ name: 'Arif Rahman Hakim', area: 'Surabaya' });
+  await createEmployee({
+    name: 'Lestari Wulandari',
+    position: 'Koordinator',
+    area: 'Surabaya',
+  });
+  await createEmployee({ name: 'Indra Gunawan', area: 'Jakarta' });
+  await createEmployee({ name: 'Siti Fatimah', area: 'Jakarta' });
+  await createEmployee({ name: 'Agus Supriadi', area: 'Jakarta' });
+  await createEmployee({ name: 'Retno Maharani', area: 'Jakarta' });
+  await createEmployee({ name: 'Eko Saputro', area: 'Jakarta' });
+  await createEmployee({ name: 'Yuli Kartika Sari', area: 'Jakarta' });
+  await createEmployee({
+    name: 'Joko Susanto',
+    position: 'Koordinator',
+    area: 'Jakarta',
+  });
 
   await prisma.apiKey.createMany({
     data: [
